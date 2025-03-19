@@ -71,7 +71,6 @@ conda install pytorch==2.5.0 torchvision==0.20.0 torchaudio==2.5.0 pytorch-cuda=
 
 pip install qwen_vl_utils flash-attn
 ```
-# Download model weights
 You can download all trained GPT4Scene model weights, dataset and annotations by running the following command:
 ```bash
 python download.py
@@ -84,76 +83,37 @@ python download.py
 2. Download ScanNet videos.
 3. Preprocess raw scans so that the data directory looks like this:
 ```ascii
-scannet_scenes/
-├── 2d_color_images/
-│   └── scene0000_00/
-│       └── color/
-│           ├── 0.jpg
-│           ├── 1.jpg
-│           ├── 2.jpg
-│           ├── ...
-│           └── 15.jpg
-└── videos/
-    ├── scene0000_02.mp4
-    ├── scene0001_00.mp4
-    ├── scene0001_01.mp4
-    ├── ...
-    └── scene0005_00.mp4
+improving-3d-qa/
+└── scannet_scenes/
+    ├── 2d_color_images/
+    │   └── scene0000_00/
+    │       └── color/
+    │           ├── 0.jpg
+    │           ├── 1.jpg
+    │           ├── 2.jpg
+    │           ├── ...
+    │           └── 15.jpg
+    └── videos/
+        ├── scene0000_02.mp4
+        ├── scene0001_00.mp4
+        ├── scene0001_01.mp4
+        ├── ...
+        └── scene0005_00.mp4
 ```
 
 ## Usage
 
-Since the pipeline uses components from different environments, you'll need to run each part separately:
-
-
-## Running the Pipeline
-
-1. Extract video features (GPT4Scene environment):
+Simply run:
 ```bash
-conda activate gpt4scene
-python extract_features.py \
-    --input_video path/to/video.mp4 \
-    --output_features path/to/features.pkl
+./run_pipeline.sh
 ```
 
-2. Transform question and extract text features (UniVTG environment):
-```bash
-conda activate univtg
-python transform_text.py \
-    --input_question "What color is the chair in the kitchen?" \
-    --output_dir path/to/text_features/
-```
+This script handles:
+- Environment switching between UniVTG and GPT4Scene
+- Video feature extraction
+- Text processing and feature extraction
+- Temporal grounding
+- 3D scene understanding
+- Result aggregation
 
-3. Extract text features (UniVTG environment):
-```bash
-conda activate univtg
-python extract_text_features.py \
-    --input_text path/to/transformed_text.txt \
-    --output_features path/to/text_features.pkl
-```
-
-4. Run temporal grounding with UniVTG (UniVTG environment):
-```bash
-conda activate univtg
-python run_univtg.py \
-    --video_features path/to/features.pkl \
-    --text_features path/to/text_features.pkl \
-    --output_clip path/to/relevant_clip.mp4
-```
-
-5. Run 3D scene understanding with GPT4Scene (GPT4Scene environment):
-```bash
-conda activate gpt4scene
-python run_gpt4scene.py \
-    --input_clip path/to/relevant_clip.mp4 \
-    --question "What color is the chair in the kitchen?" \
-    --output_dir path/to/results/
-```
-
-Alternatively, use our wrapper script that handles all steps:
-```bash
-python run_pipeline.py \
-    --input_video path/to/video.mp4 \
-    --question "What color is the chair in the kitchen?" \
-    --output_dir results/
-```
+For detailed pipeline steps and individual component usage, see `run_pipeline.sh`.
