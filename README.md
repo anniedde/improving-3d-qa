@@ -1,6 +1,7 @@
 # Improving 3D Question Answering via Enhanced Video Frame Sampling
 
 ## Pipeline
+```ascii
                         Natural Language Question
                                 ↓
 Video Input               [Query Transformation]
@@ -21,3 +22,4 @@ Natural Language Question →  [GPT4Scene]
                     3D Scene Understanding
                               ↓
                          QA Output
+```
