@@ -1,0 +1,1 @@
+python extract.py --csv output/csv/clip-vit_info.csv --num_decoding_thread 4 --model_version ViT-B/32 --clip_len=2 --half_precision 0
